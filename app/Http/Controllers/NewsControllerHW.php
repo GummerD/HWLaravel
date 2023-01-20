@@ -28,17 +28,17 @@ class NewsControllerHW extends Controller
         ]);
     }
 
-    public function links_on_all_news() // пока не работает
+    public function links_on_all_news_title($category) // 20.01.2022 необходимо было передать параметр, все сделал.
     {
-        return \view('news.HW_2.links_on_all_news', [
-            'category' => $this->storeg_news()
+        return \view('news.HW_2.links_on_all_news_title', [
+            'category' => $this->storeg_news($category)
         ]);
     }
 
-    public function links_on_news() // пока не работает
+    public function links_on_text_news($category, $title) // не забывать передавать параметры.
     {
-        return \view('news.HW_2.links_on_news', [
-            'category' => $this->storeg_news()
+        return \view('news.HW_2.links_on_text_news', [
+            'text' => $this->title_search($category, $title)
         ]);
     }
 

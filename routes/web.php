@@ -1,8 +1,11 @@
 <?php
 
+
+use App\Http\Controllers\Admin\IndexController as AdminController;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\NewsControllerHW;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\NewsControllerHW;
+use App\Http\Controllers\NewsControllerLW;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,8 +22,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-// HW for 1 lesson:
+//ADMIN ROUTES
+Route::group(['prefix' => 'admin'], static function () {
+    Route::get('/', AdminController::class)
+    ->name('admin.index');
+});
+/*----------------------------------------------------------------------------------------------------------------*/
 
+// HW FOR 1 LESSON:
 Route::group(['prefix' => 'HW_1'], static function () {
     Route::get(
         '/greeting_page/{name}',
@@ -149,8 +158,8 @@ Route::group(['prefix' => 'HW_1'], static function () {
         }
     );
 });
-
 /*------------------------------------------------------------------------------------------------------------------*/
+
 
 // HW FOR 2 LESSON:
 Route::group(['prefix' => 'HW_2'], static function () {
@@ -176,17 +185,17 @@ Route::group(['prefix' => 'HW_2'], static function () {
         ->name('category_news');
     
     /*
-    | Route for 2 exercise. - пока не работает
+    | Route for 2 exercise.
     | Subparagraph 1.3.:
     */
-    Route::get('/links_on_all_news/{category}', [NewsControllerHW::class, 'links_on_all_news'])
-        ->name('links_on_all_news');
+    Route::get('/category_news/{category}/links_on_all_news_title', [NewsControllerHW::class, 'links_on_all_news_title'])
+        ->name('links_on_all_news_title');
     /*
-    | Route for 2 exercise. - пока не работает
+    | Route for 2 exercise.
     | Subparagraph 1.4.:
     */
-    Route::get('/links_on_news/{category}', [NewsControllerHW::class, 'links_on_news'])
-        ->name('links_on_news');
+    Route::get('/links_on_all_news/{category}/{title}/links_on_text_news', [NewsControllerHW::class, 'links_on_text_news'])
+        ->name('links_on_text_news');
     /*
     | Route for 2 exercise. 
     | Subparagraph 1.5.:
@@ -201,3 +210,13 @@ Route::group(['prefix' => 'HW_2'], static function () {
         ->name('insert_news');
 
 });
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+
+//Lesson 3 from 17.01.2023:
+Route::group(['prefix' => 'LW_3'], static function() {
+    Route::get('/news', [NewsControllerLW::class, 'index'])
+     ->name('news');
+    Route::get('/news/{id}/show', [NewsControllerLW::class, 'show'])
+    ->where('id', '\d+')
+        ->name('news.show');
+ });
