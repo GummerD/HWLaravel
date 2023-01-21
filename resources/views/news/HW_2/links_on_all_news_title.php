@@ -1,5 +1,5 @@
 <div style="border: 2px solid red; margin: 10px">
-    <h1>Список новостей</h1>
+    <h1>Список новостей:</h1>
 </div>
 
 <?php foreach ($category as $title => $text) :

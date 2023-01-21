@@ -1,5 +1,5 @@
 <div style="border: 2px solid red; margin: 10px">
-    <h1>Страница новости</h1>
+    <h1>Страница новости.</h1>
 </div>
 
 <div style="border: 2px solid red; margin: 10px">
