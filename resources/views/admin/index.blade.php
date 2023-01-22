@@ -13,6 +13,8 @@
 
   
   <div class="table-responsive">
-    
+    @include('inc.info', ['status' => 'complete'])
+    {-- info/danger/worning/success --}
+    <x-alert></x-alert>
   </div>
 @endsection
