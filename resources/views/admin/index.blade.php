@@ -14,7 +14,10 @@
   
   <div class="table-responsive">
     @include('inc.info', ['status' => 'complete'])
-    {-- info/danger/worning/success --}
-    <x-alert></x-alert>
+    {-- info/danger/warning/success --}
+    <x-alert type='info' message="Это информационное сообщение"></x-alert>
+    <x-alert type='danger' message="Это информационное сообщение"></x-alert>
+    <x-alert type='warning' message="Это информационное сообщение"></x-alert>
+    <x-alert type='success' message="Это информационное сообщение"></x-alert>
   </div>
 @endsection

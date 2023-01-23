@@ -25,7 +25,7 @@ Route::get('/', function () {
 //ADMIN ROUTES
 Route::group(['prefix' => 'admin'], static function () {
     Route::get('/', AdminController::class)
-    ->name('admin.index');
+        ->name('admin.index');
 });
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -169,7 +169,7 @@ Route::group(['prefix' => 'HW_2'], static function () {
     */
     Route::get('/preset_news', [NewsControllerHW::class, 'show_preset_all_news'])
         ->name('preset_all_news');
-    
+
     /*
     | Route for 2 exercise.
     | Subparagraph 1.1.:
@@ -183,7 +183,7 @@ Route::group(['prefix' => 'HW_2'], static function () {
     */
     Route::get('/category_news', [NewsControllerHW::class, 'show_category_news'])
         ->name('category_news');
-    
+
     /*
     | Route for 2 exercise.
     | Subparagraph 1.3.:
@@ -208,15 +208,41 @@ Route::group(['prefix' => 'HW_2'], static function () {
     */
     Route::get('/insert_news', [NewsControllerHW::class, 'insert_news'])
         ->name('insert_news');
-
 });
 /*-----------------------------------------------------------------------------------------------------------------------------*/
 
 //Lesson 3 from 17.01.2023:
-Route::group(['prefix' => 'LW_3'], static function() {
+Route::group(['prefix' => 'LW_3'], static function () {
     Route::get('/news', [NewsControllerLW::class, 'index'])
-     ->name('news');
+        ->name('news');
     Route::get('/news/{id}/show', [NewsControllerLW::class, 'show'])
-    ->where('id', '\d+')
+        ->where('id', '\d+')
         ->name('news.show');
- });
+});
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+
+
+// HW FOR 3 LESSON:
+Route::group(['prefix' => 'HW_3'], static function () {
+
+    Route::get('/{counter}/preset_news', [NewsControllerHW::class, 'HW_3_show_preset_all_news']) // через where предустановил количество div с выводимыми на главной странице новостями
+        ->where('counter', 2)->name('preset_all_news');
+
+    Route::get('/greeting_page', [NewsControllerHW::class, 'HW_3_show_greeting_page'])
+        ->name('greeting_page');
+
+    Route::get('/category_news', [NewsControllerHW::class, 'HW_3_show_category_news'])
+        ->name('category_news');
+
+    Route::get('/category_news/{category}/links_on_all_news_title', [NewsControllerHW::class, 'HW_3_links_on_all_news_title'])
+        ->name('links_on_all_news_title');
+
+    Route::get('/links_on_all_news/{category}/{title}/links_on_text_news', [NewsControllerHW::class, 'HW_3_links_on_text_news'])
+        ->name('links_on_text_news');
+
+    Route::get('/authorization_page', [NewsControllerHW::class, 'HW_3_show_authorization_page'])
+        ->name('authorization_page');
+
+    Route::get('/insert_news', [NewsControllerHW::class, 'HW_3_insert_news'])
+        ->name('insert_news');
+});

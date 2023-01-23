@@ -15,10 +15,10 @@ trait TraitPresetNews
 
         for ($i = 1; $i <= 5; $i++) {
             for ($j = 1; $j <= 4; $j++) {
-                $preset_news[$i . '_category'][$j . '_title'] = \fake()->text(rand(500,1000 ));
-            }
+                $preset_news[$i . '_category'][$j . '_title'] = \fake()->text(rand(100,250 ));
+            }   
         }
-
+        //dd($preset_news);
         if (!empty($category)) {
             return $preset_news[$category];
         }
@@ -69,5 +69,24 @@ trait TraitPresetNews
         $preset_news = $preset_news[$category];
         $text =  $preset_news[$title];
         return $text;
+    }
+
+    public function storeg_news_counter($counter = NULL): array
+    {
+        //dump($param);
+        $preset_news = [];
+
+        for ($i = 1; $i <= 5; $i++) {
+            for ($j = 1; $j <= $counter; $j++) {
+                $preset_news[$i . '_category'][$j . '_title'] = \fake()->text(rand(100,200 ));
+            }   
+        }
+        //dd($preset_news);
+
+        //dump($preset_news);
+        return $preset_news;
+
+
+      
     }
 }
