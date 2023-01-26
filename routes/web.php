@@ -1,11 +1,13 @@
 <?php
 
 
-use App\Http\Controllers\Admin\IndexController as AdminController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsControllerHW;
 use App\Http\Controllers\NewsControllerLW;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Admin\IndexController as AdminController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,13 +21,18 @@ use App\Http\Controllers\NewsControllerLW;
 */
 
 Route::get('/', function () {
+    //dd(app());
     return view('welcome');
 });
 
 //ADMIN ROUTES
-Route::group(['prefix' => 'admin'], static function () {
+Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function () {
     Route::get('/', AdminController::class)
-        ->name('admin.index');
+        ->name('index');
+    
+    // On LW_4 23.01.2023
+    Route::resource('categories', AdminCategoryController::class);
+    Route::resource('news', AdminNewsController::class);
 });
 /*----------------------------------------------------------------------------------------------------------------*/
 
