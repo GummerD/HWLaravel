@@ -5,8 +5,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsControllerHW;
 use App\Http\Controllers\NewsControllerLW;
-use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\HW_4\FormsController;
+use App\Http\Controllers\HW_4\OrderController;
 use App\Http\Controllers\Admin\IndexController as AdminController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 
 /*
@@ -252,4 +254,38 @@ Route::group(['prefix' => 'HW_3'], static function () {
 
     Route::get('/insert_news', [NewsControllerHW::class, 'HW_3_insert_news'])
         ->name('insert_news');
+});
+
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+
+
+// HW FOR 4 LESSON:
+Route::group(['prefix' => 'HW_4'], static function () {
+
+    Route::get('/{counter}/preset_news', [NewsControllerHW::class, 'HW_4_show_preset_all_news']) // через where предустановил количество div с выводимыми на главной странице новостями
+        ->where('counter', 2)->name('preset_all_news');
+
+    Route::get('/greeting_page', [NewsControllerHW::class, 'HW_4_show_greeting_page'])
+        ->name('greeting_page');
+
+    Route::get('/category_news', [NewsControllerHW::class, 'HW_4_show_category_news'])
+        ->name('category_news');
+
+    Route::get('/category_news/{category}/links_on_all_news_title', [NewsControllerHW::class, 'HW_4_links_on_all_news_title'])
+        ->name('links_on_all_news_title');
+
+    Route::get('/links_on_all_news/{category}/{title}/links_on_text_news', [NewsControllerHW::class, 'HW_4_links_on_text_news'])
+        ->name('links_on_text_news');
+
+    Route::get('/authorization_page', [NewsControllerHW::class, 'HW_4_show_authorization_page'])
+        ->name('authorization_page');
+
+    Route::get('/insert_news', [NewsControllerHW::class, 'HW_4_insert_news'])
+        ->name('insert_news');
+
+    /*Route::get('/feedback', [NewsControllerHW::class, 'HW_4_feedback'])
+        ->name('feedback');*/
+
+    Route::resource('feedback', FormsController::class);
+    Route::resource('order_form', OrderController::class);
 });
