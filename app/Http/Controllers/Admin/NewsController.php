@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\News;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -16,7 +17,12 @@ class NewsController extends Controller
      */
     public function index():View
     {
-        return \view('admin.news.index');
+        $model = new News();
+       // $newslist = $model->getAllNews();
+        dd($newslist = $model->getNewsBiId(5));
+        return \view('admin.news.index', [
+            'newslist' => $newslist,
+        ]);
     }
 
     /**
