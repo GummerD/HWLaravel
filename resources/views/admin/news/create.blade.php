@@ -20,6 +20,15 @@
         <form method ="post" action="{{ route('admin.news.store') }}">
             @csrf
             <div class="form-group">
+                <label for="category_id">Категория</label>
+                <select type="text" name="category_id" id="category_id" class="form-control"value="{{ old('category') }}">
+                    <option value="0">-- Выбрать --</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
                 <label for="title">Заголовок</label>
                 <input type="text" name="title" id="title" class="form-control"value="{{ old('title') }}">
             </div>
@@ -28,10 +37,21 @@
                 <input type="text" name="author" id="author" class="form-control" value="{{ old('author') }}">
             </div>
             <div class="form-group">
+                <label for="status">Статус</label>
+                <select type="text" name="status" id="status" class="form-control" value="{{ old('status') }}">
+                    @foreach ($statuses as $status)
+                        <option @if(old('status') === $status) selected @endif>{{ $status }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="image">Изображение</label>
+                <input type="file" name="image" id="image" class="form-control">
+            </div>
+            <div class="form-group">
                 <label for="description">Описание</label>
                 <textarea class="form-control" type="text" name="description" id="description" >{{ old('description')}}</textarea>
             </div>
-
             <br>
             <button type="submit" class="btn btn-success">Сохранить</button>
         </form>

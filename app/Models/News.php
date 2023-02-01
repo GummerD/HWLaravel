@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
 class News extends Model
@@ -12,6 +13,32 @@ class News extends Model
 
     protected $table = 'news';
 
+    protected $fillable = [ // разрешить заполнение полей
+        'title',
+        'image',
+        'author',
+        'status',
+        'description',
+    ];
+
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'create_has_news_has', 
+        'news_id', 'category_id', 'id', 'id');
+    }
+
+    /*
+    protected $guarded = [  // защищать поля - не давать изменять
+        'id',
+    ];
+    */
+
+
+
+
+
+    /* LW_5
     public function getAllNews(): Collection
     {
        //return \DB::select("SELECT * FROM {$this->table}");
@@ -23,6 +50,6 @@ class News extends Model
         //return \DB::selectOne("SELECT * FROM {$this->table} WHERE id = :id", [':id' => $id]);
         return \DB::table($this->table)->find($id);
     }
-
+    */
 
 }
