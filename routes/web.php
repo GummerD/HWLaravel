@@ -10,6 +10,11 @@ use App\Http\Controllers\HW_4\OrderController;
 use App\Http\Controllers\Admin\IndexController as AdminController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\HW_6\NewsController;
+use App\Http\Controllers\HW_6\NewsController as HW_6NewsController;
+use App\Http\Controllers\HW_6\CategoryController as HW_6CategoryController;
+use App\Http\Controllers\HW_6\OrderFormController;
+use App\Http\Controllers\HW_6\SourcesController as HW_6SourcesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -31,7 +36,7 @@ Route::get('/', function () {
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function () {
     Route::get('/', AdminController::class)
         ->name('index');
-    
+
     // On LW_4 23.01.2023
     Route::resource('categories', AdminCategoryController::class);
     Route::resource('news', AdminNewsController::class);
@@ -289,3 +294,21 @@ Route::group(['prefix' => 'HW_4'], static function () {
     Route::resource('feedback', FormsController::class);
     Route::resource('order_form', OrderController::class);
 });
+/*-----------------------------------------------------------------------------------------------------------------------------*/
+
+
+// HW FOR 6 LESSON:
+Route::group(['prefix' => 'HW_6', 'as' => 'hw_6.'], static function () {
+    Route::get('/preset_news', [NewsControllerHW::class, 'HW_6_show_preset_all_news'])
+        ->name('preset_all_news');
+
+    Route::get('/{news}/links_on_text_news', [NewsControllerHW::class, 'HW_6_links_on_text_news'])
+        ->name('links_on_text_news');
+
+    
+    Route::resource('news', HW_6NewsController::class);
+    Route::resource('categories', HW_6CategoryController::class);
+    Route::resource('orderForm', OrderFormController::class);
+    Route::resource('sources', HW_6SourcesController::class);
+});
+/*-----------------------------------------------------------------------------------------------------------------------------*/

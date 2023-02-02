@@ -1,11 +1,11 @@
 <header class="blog-header py-3">
     <div class="row flex-nowrap justify-content-between align-items-center">
         <div class="col-4">
-            <a class="blog-header-logo text-dark" href="#">Новостной портал HW_4 Laravel</a>
+            <a class="blog-header-logo text-dark" href="#">Новостной портал Laravel</a>
         </div>
         
         <div class="col-4">
-            <a class="btn btn-sm btn-outline-secondary " href="{{ route ('order_form.index')}}">Выгрузка данных</a>
+            <a class="btn btn-sm btn-outline-secondary " href="{{ route ('hw_6.orderForm.index')}}">Выгрузка данных</a>
         </div>
         <div class="col-4 d-flex justify-content-end align-items-center">
             <a class="text-muted" href="#">

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class HW_Category extends Model
 {
@@ -12,13 +13,16 @@ class HW_Category extends Model
 
     protected $table = 'h_w__categories';
 
-    public function getAllNews(): Collection
-    {   
-       return \DB::table($this->table)->get();
+    protected $fillable = [ 
+        'title',
+        'description',
+    ];
+
+
+    public function news(): BelongsToMany
+    {
+        return $this->belongsToMany(HW_News::class, 'hw_categories_has_news', 
+        'category_id', 'news_id', 'id', 'id');
     }
 
-    public function getNewsBiId(int $id):mixed
-    {
-        return \DB::table($this->table)->find($id);
-    }
 }

@@ -11,15 +11,11 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
-        Schema::create('h_w__sources', function (Blueprint $table) {
-            $table->id();
-            $table->string('source_name', 150);
-            $table->text('source_url');
-            $table->timestamps();
+        Schema::table('h_w__news', function (Blueprint $table) {
+            $table->string('image', 255)->nullable();
         });
-        
     }
 
     /**
@@ -27,8 +23,10 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('h_w__sources');
+        Schema::table('h_w__news', function (Blueprint $table) {
+            $table->dropColumn('image');
+        });
     }
 };

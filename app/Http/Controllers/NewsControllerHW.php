@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\HW_News;
 use Illuminate\Http\Request;
+use App\QueryBuilders\HW\HWNewsQueryBuilder;
+use App\QueryBuilders\HW\HWCategoryQueryBuilder;
 
 class NewsControllerHW extends Controller
 {
@@ -150,5 +153,47 @@ class NewsControllerHW extends Controller
         return \view('news.HW_4.feedback');
     }
     */
+     /*------------------------------------------------------------------------------------------------------------------*/
+
+     //FOR HW_6:
+     public function HW_6_show_preset_all_news(HWNewsQueryBuilder $hWNewsQueryBuilder, HWCategoryQueryBuilder $hWCategoryQueryBuilder)
+    {
+        return \view('news.HW_6.storeg_news', [
+            'newslist' => $hWNewsQueryBuilder->getAll(),
+            'categories' => $hWCategoryQueryBuilder->getAll()
+        ]);
+    }
+
+    public function HW_6_show_greeting_page()
+    {
+        return \view('news.HW_4.greeting_page');
+    }
+
+    public function HW_6_show_category_news()
+    {
+        return \view('news.HW_4.category_news', [
+            'news' => $this->storeg_news()
+        ]);
+    }
+
+    public function HW_6_links_on_all_news_title($category) 
+    {
+        return \view('news.HW_4.links_on_all_news_title', [
+            'category' => $this->storeg_news($category)
+        ]);
+    }
+
+    public function HW_6_links_on_text_news(HW_News $news)
+    {
+        return \view('news.HW_6.links_on_text_news', [
+            'text' => $news->description,
+        ]);
+    }
+
+    public function HW_6_show_authorization_page()
+    {
+        return \view('news.HW_4.authorization_page');
+    }
+
 
 }   

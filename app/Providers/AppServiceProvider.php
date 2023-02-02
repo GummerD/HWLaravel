@@ -28,6 +28,27 @@ class AppServiceProvider extends ServiceProvider
             NewsQueryBuilder::class   
         );
 
+        $this->app->bind(
+            QueryBuilder::class,
+            HWCategoryQueryBuilder::class
+        );
+
+        $this->app->bind(
+            QueryBuilder::class,
+            HWNewsQueryBuilder::class   
+        );
+
+        $this->app->bind(
+            QueryBuilder::class,
+            HWSourcesQueryBuilder::class   
+        );
+
+        $this->app->bind(
+            QueryBuilder::class,
+            HWOrderFormQueryBuilder::class   
+        );
+
+
     }
 
     /**

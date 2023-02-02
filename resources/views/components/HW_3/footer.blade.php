@@ -13,6 +13,6 @@
         <a href="{{ route('authorization_page') }}">Пройти авторизацию >>></a>
     </p>
     <p>
-        <a href="{{ route('insert_news') }}">Добавить новость >>></a>
+        <a href="{{ route('hw_6.news.index') }}">Изменить новость >>></a>
     </p>
 </footer>

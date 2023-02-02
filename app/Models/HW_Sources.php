@@ -12,13 +12,8 @@ class HW_Sources extends Model
 
     protected $table = 'h_w__sources';
 
-    public function getAllNews(): Collection
-    {   
-       return \DB::table($this->table)->get();
-    }
-
-    public function getNewsBiId(int $id):mixed
-    {
-        return \DB::table($this->table)->find($id);
-    }
+    protected $fillable = [ 
+        'source_name',
+        'source_url',
+    ];
 }
