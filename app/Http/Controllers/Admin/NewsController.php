@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Enumus\NewsStatusEnum;
-use App\Http\Controllers\Controller;
 use App\Models\News;
-use App\QueryBuilders\CategoryQueryBuilder;
-use App\QueryBuilders\NewsQueryBuilder;
-use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use App\Enumus\NewsStatusEnum;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Contracts\View\View;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Validation\Rules\Enum;
+use App\Http\Requests\News\EditRequest;
+use App\QueryBuilders\NewsQueryBuilder;
+use App\Http\Requests\News\CreateRequest;
+use App\QueryBuilders\CategoryQueryBuilder;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class NewsController extends Controller
 {
@@ -47,15 +52,27 @@ class NewsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request):RedirectResponse
+    public function store(CreateRequest $request):RedirectResponse
     {
-        $request->validate([
-            'title' => 'required'
+       
+        /*
+        $request->validate([ - все перенесено в контроллер, можно также вызвать из Model, но лучше прописать отдельную сущность
+            'category_id' => ['required', 'array', ] ,
+            'category_id.*' => ['exists:categories,id'],
+            'title' => ['required', 'min:5', 'max:200'],
+            'author' => ['nullable', 'string', 'min:2', 'max:30' ],
+            'status' => ['required', new Enum(NewsStatusEnum::class)],
+            'image' => ['sometimes'],
+            'description' => ['nullable', 'sting'],
         ]);
+        $news = new News($request->except('_token', 'category_ids')); - не нужно боле использовать, так как поля уже прописаны в сщности - CreateRequest
+        */
+        
 
-        $news = new News($request->except('_token', 'category_id')); // News::create();
+        $news = News::create($request->validated());
 
-        if ($news->save()) {
+        if ($news) {
+            $news->categories()->attach($request->getCategoryIds());
             return \redirect()->route('admin.news.index')->with('success', 'Новость успешно добавлена');
         }
 
@@ -95,16 +112,16 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, News $news): RedirectResponse
+    public function update(EditRequest $request, News $news): RedirectResponse
     {
         //dd($request->all());
-        $news = $news->fill($request->except('_token', 'category_ids'));
+        $news = $news->fill($request->validated());
         if ($news->save()) {
-            $news->categories()->sync( (array) $request->input('category_ids'));
-            return \redirect()->route('admin.news.index')->with('success', 'Новость успешно обновлена');
+            $news->categories()->sync($request->getCategoryIds());
+            return \redirect()->route('admin.news.index')->with('success', __('messages.admin.news.success'));
         }
 
-        return \back()->with('error', 'Не удалось изменить запись');
+        return \back()->with('error', __('messages.admin.news.fail'));
     }
 
     /**
@@ -113,8 +130,16 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(News $news): JsonResponse
     {
-        //
+        try{
+            $news->delete();
+
+            return \response()->json('ok');
+        }catch(\Exception $exeption){
+            \Log::error($exeption->getMessage(), [$exeption]);
+
+            return \response()->json('error', 400);
+        }
     }
 }

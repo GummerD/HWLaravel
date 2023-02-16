@@ -20,21 +20,21 @@
         <form method ="post" action="{{ route('admin.news.store') }}">
             @csrf
             <div class="form-group">
-                <label for="category_id">Категория</label>
-                <select type="text" name="category_id" id="category_id" class="form-control"value="{{ old('category') }}">
+                <label for="category_ids">Категория</label>
+                <select class="form-control @error ('category_ids') is-invalid @enderror"  name="category_ids[]" id="category_ids"  multiple>
                     <option value="0">-- Выбрать --</option>
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                        <option @if((int) old('category_ids') === $category->id) selected @endif value="{{ $category->id }}">{{ $category->title }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
                 <label for="title">Заголовок</label>
-                <input type="text" name="title" id="title" class="form-control"value="{{ old('title') }}">
+                <input type="text" name="title" id="title" class="form-control @error ('title') is-invalid @enderror" value="{{ old('title') }}">
             </div>
             <div class="form-group">
                 <label for="author">Автор</label>
-                <input type="text" name="author" id="author" class="form-control" value="{{ old('author') }}">
+                <input type="text" name="author" id="author" class="form-control @error ('author') is-invalid @enderror" value="{{ old('author') }}">
             </div>
             <div class="form-group">
                 <label for="status">Статус</label>
@@ -50,7 +50,7 @@
             </div>
             <div class="form-group">
                 <label for="description">Описание</label>
-                <textarea class="form-control" type="text" name="description" id="description" >{{ old('description')}}</textarea>
+                <textarea class="form-control @error ('description') is-invalid @enderror" type="text" name="description" id="description" >{{ old('description')}}</textarea>
             </div>
             <br>
             <button type="submit" class="btn btn-success">Сохранить</button>

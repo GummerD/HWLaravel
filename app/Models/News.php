@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Category;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -22,13 +23,26 @@ class News extends Model
         'description',
     ];
 
+    protected $casts = [ // приведение к опредленному типу, на выходе конвертирует в то, что нужно. Для вычленения нужного поля из БД.
+        'categories_id' => 'array',
+    ];
 
-    public function categories(): BelongsToMany
+    protected function author(): Attribute // пример Акссесора, который делает поле автора с большой буквы
+    {
+        return Attribute::make(
+            get: fn($value): string =>strtoupper($value),
+            set: fn($value): string =>strtolower($value)
+        );
+    }
+
+
+    public function categories(): BelongsToMany // функция обеспечивает связь между таблицами категория и новости, с помощь таблицы "create_has_news_has"
     {
         return $this->belongsToMany(Category::class, 'create_has_news_has', 
         'news_id', 'category_id', 'id', 'id');
     }
 
+    
     /*
     protected $guarded = [  // защищать поля - не давать изменять
         'id',
