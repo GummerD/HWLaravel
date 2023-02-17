@@ -7,10 +7,12 @@ use Illuminate\Http\Request;
 use App\Enumus\NewsStatusEnum;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\HW_7\News\CreateRequest;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\HW_7\News\EditRequest;
 use App\QueryBuilders\HW\HWNewsQueryBuilder;
 use App\QueryBuilders\HW\HWCategoryQueryBuilder;
-
+use GrahamCampbell\ResultType\Success;
 
 class NewsController extends Controller
 {
@@ -45,19 +47,17 @@ class NewsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request):RedirectResponse
+    public function store(CreateRequest $request):RedirectResponse
     {
-        $request->validate([
-            'title' => 'required'
-        ]);
-
-        $news = new HW_News($request->except('_token', 'category_id'));
+       
+        $news = new HW_News($request->validated());
 
         if ($news->save()) {
-            return \redirect()->route('hw_6.news.index')->with('success', 'Новость успешно добавлена');
+            $news->categories()->attach($request->getCategoryIds());
+            return \redirect()->route('hw_6.news.index')->with('success', __('messages.admin.news.success'));
         }
 
-        return \back()->with('error', 'Не удалось добавить новость');
+        return \back()->with('error', __('messages.admin.news.fail'));
     }
 
     /**
@@ -93,15 +93,15 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, HW_News $news): RedirectResponse
+    public function update(EditRequest $request, HW_News $news): RedirectResponse
     {
-        $news = $news->fill($request->except('_token', 'category_ids'));
+        $news = $news->fill($request->validated());
         if ($news->save()) {
-            $news->categories()->sync( (array) $request->input('category_ids'));
-            return \redirect()->route('hw_6.news.index')->with('success', 'Новость успешно обновлена');
+            $news->categories()->sync($request->getCategoryIds());
+            return \redirect()->route('hw_6.news.index')->with('success', __('messages.admin.news.success'));
         }
 
-        return \back()->with('error', 'Не удалось изменить запись');
+        return \back()->with('error', __('messages.admin.news.fail'));
     }
 
     /**
@@ -110,8 +110,16 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(HW_News $news)
     {
-        //
+        try{
+            $news->delete();
+
+            return \response()->json('ok');
+        }catch(\Exception $exeption){
+            \Log::error($exeption->getMessage(), [$exeption]);
+
+            return \response()->json('error', 400);
+        }
     }
 }

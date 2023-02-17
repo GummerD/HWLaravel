@@ -20,7 +20,7 @@
         <form method ="post" action="{{ route('hw_6.categories.store') }}">
             @csrf
             <div class="form-group">
-                <label for="title">Название категории</label>
+                <label for="title">Заголовок категории</label>
                 <input class="form-control" type="text" name="title" id="title" value="{{ old('title') }}">
             </div>
             <div class="form-group">

@@ -20,11 +20,11 @@
         <form method ="post" action="{{ route('hw_6.news.store') }}">
             @csrf
             <div class="form-group">
-                <label for="category_id">Категория</label>
-                <select type="text" name="category_id" id="category_id" class="form-control"value="{{ old('category') }}">
+                <label for="category_ids">Категория</label>
+                <select class="form-control @error ('category_ids') is-invalid @enderror"  name="category_ids[]" id="category_ids"  multiple>
                     <option value="0">-- Выбрать --</option>
                     @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->title }}</option>
+                        <option @if((int) old('category_ids') === $category->id) selected @endif value="{{ $category->id }}">{{ $category->title }}</option>
                     @endforeach
                 </select>
             </div>

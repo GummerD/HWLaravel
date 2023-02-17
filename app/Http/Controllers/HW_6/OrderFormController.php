@@ -7,7 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use App\Http\Requests\HW_7\OrderForm\EditRequest;
 use App\QueryBuilders\HW\HWOrderFormQueryBuilder;
+use App\Http\Requests\HW_7\OrderForm\CreateRequest;
 
 class OrderFormController extends Controller
 {
@@ -39,16 +41,9 @@ class OrderFormController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request):RedirectResponse
+    public function store(CreateRequest $request):RedirectResponse
     {
-        $request->validate([
-            'name' => 'required',
-            'phone' => 'required',
-            'email' => 'required',
-            'description' => 'required',
-        ]);
-
-        $orderForms = new OrderFormHW($request->except('_token'));
+        $orderForms = new OrderFormHW($request->validated());
 
         if ($orderForms->save()) {
             return \redirect()->route('hw_6.orderForm.index')->with('success', 'Запись успешно обновлена');
@@ -89,14 +84,14 @@ class OrderFormController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, OrderFormHW $orderForms): RedirectResponse
+    public function update(EditRequest $request, OrderFormHW $orderForms): RedirectResponse
     {
-        $orderForms = $orderForms->fill($request->except('_token'));
+        $orderForms = $orderForms->fill($request->validated());
         if($orderForms->save()){
-            return \redirect()->route('hw_6.orderForm.index')->with('success', 'Запись успешно обновлена');
+            return \redirect()->route('hw_6.orderForm.index')->with('success', __('messages.admin.news.success'));
         }
 
-        return \back()->with('error', 'Не удалось добавить запись');
+        return \back()->with('error', __('messages.admin.news.fail'));
     }
 
     /**
@@ -105,8 +100,16 @@ class OrderFormController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(OrderFormHW $orderForm)
     {
-        //
+        try{
+            $orderForm->delete();
+
+            return \response()->json('ok');
+        }catch(\Exception $exeption){
+            \Log::error($exeption->getMessage(), [$exeption]);
+
+            return \response()->json('error', 400);
+        }
     }
 }

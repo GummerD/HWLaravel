@@ -137,10 +137,15 @@ return [
     'attributes' => [
         'title' => 'заголовок',
         'category_id' => 'категория',
-        'category_ids' => 'категория',
+        'category_ids' => 'категория_ids',
         'author' => 'автор',
         'description' => 'описание',
         'created_at' => 'дата создания',
         'updated_at' => 'дата обновления',
+        'source_name' => 'название ресурса',
+        'source_url' => 'адрес ресурса',
+        'name' => 'имя заказчика',
+        'phone' => 'номер телефона',
+        'email' => 'адрес электронной почты',
     ]
 ];

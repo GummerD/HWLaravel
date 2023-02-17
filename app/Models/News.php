@@ -27,7 +27,7 @@ class News extends Model
         'categories_id' => 'array',
     ];
 
-    protected function author(): Attribute // пример Акссесора, который делает поле автора с большой буквы
+    protected function author(): Attribute // пример Акссесора, который делает поле автора с большой буквы, но если сделат сеттер, то в бащу будет внесено нужное значение.
     {
         return Attribute::make(
             get: fn($value): string =>strtoupper($value),

@@ -3,14 +3,16 @@
 namespace App\Http\Controllers\HW_6;
 
 use App\Models\HW_News;
+use App\Models\HW_Category;
 use Illuminate\Http\Request;
 use App\Enumus\NewsStatusEnum;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
-use App\Models\HW_Category;
 use Illuminate\Http\RedirectResponse;
 use App\QueryBuilders\HW\HWNewsQueryBuilder;
+use App\Http\Requests\HW_7\Category\EditRequest;
 use App\QueryBuilders\HW\HWCategoryQueryBuilder;
+use App\Http\Requests\HW_7\Category\CreateRequest;
 
 class CategoryController extends Controller
 {
@@ -42,20 +44,16 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CreateRequest $request)
     {
-        $request->validate([
-            'title' => 'required',
-            'description' => 'required',
-        ]);
 
-        $categories = new HW_Category($request->except('_token'));
+        $categories = new HW_Category($request->validated());
 
         if ($categories->save()) {
-            return \redirect()->route('hw_6.categories.index')->with('success', 'Запись успешно обновлена');
+            return \redirect()->route('hw_6.categories.index')->with('success', __('messages.admin.news.success'));
         }
 
-        return \back()->with('error', 'Не удалось добавить новость');
+        return \back()->with('error', __('messages.admin.news.fail'));
     }
 
     /**
@@ -90,14 +88,14 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, HW_Category $category): RedirectResponse
+    public function update(EditRequest $request, HW_Category $category): RedirectResponse
     {
-        $category = $category->fill($request->except('_token'));
+        $category = $category->fill($request->validated());
         if ($category->save()) {
-            return \redirect()->route('hw_6.categories.index')->with('success', 'Запись успешно обновлена');
+            return \redirect()->route('hw_6.categories.index')->with('success', __('messages.admin.news.success'));
         }
 
-        return \back()->with('error', 'Не удалось изменить запись');
+        return \back()->with('error', __('messages.admin.news.fail'));
     }
 
     /**
@@ -106,8 +104,16 @@ class CategoryController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(HW_Category $category)
     {
-        //
+        try{
+            $category->delete();
+
+            return \response()->json('ok');
+        }catch(\Exception $exeption){
+            \Log::error($exeption->getMessage(), [$exeption]);
+
+            return \response()->json('error', 400);
+        }
     }
 }

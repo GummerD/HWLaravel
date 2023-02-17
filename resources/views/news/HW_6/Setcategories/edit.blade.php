@@ -20,7 +20,7 @@
             @csrf
             @method('put')
             <div class="form-group">
-                <label for="title">Категория</label>
+                <label for="title">Заголовок категории</label>
                 <input type="text" name="title" id="title" class="form-control"value="{{ $category->title }}">
             </div>
             <div class="form-group">
