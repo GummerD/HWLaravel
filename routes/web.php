@@ -1,20 +1,23 @@
 <?php
 
-
+use App\Http\Controllers\Account\IndexController as AccountController;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsControllerHW;
 use App\Http\Controllers\NewsControllerLW;
+use App\Http\Controllers\HW_6\NewsController;
 use App\Http\Controllers\HW_4\FormsController;
 use App\Http\Controllers\HW_4\OrderController;
-use App\Http\Controllers\Admin\IndexController as AdminController;
-use App\Http\Controllers\Admin\NewsController as AdminNewsController;
-use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\HW_6\NewsController;
-use App\Http\Controllers\HW_6\NewsController as HW_6NewsController;
-use App\Http\Controllers\HW_6\CategoryController as HW_6CategoryController;
 use App\Http\Controllers\HW_6\OrderFormController;
+use App\Http\Controllers\Admin\IndexController as AdminController;
+use App\Http\Controllers\HW_6\NewsController as HW_6NewsController;
+use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\HW_6\SourcesController as HW_6SourcesController;
+use App\Http\Controllers\HW_6\CategoryController as HW_6CategoryController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\UsersController as AdminUsesrsController;
+use App\Http\Controllers\Auth\LoginController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,14 +35,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//ADMIN ROUTES
-Route::group(['prefix' => 'admin', 'as' => 'admin.'], static function () {
-    Route::get('/', AdminController::class)
-        ->name('index');
+Route::group(['middleware' => 'auth'], static function () {
+    Route::get('/logout', [LoginController::class, 'logout'])->name('account.logout');
+    Route::get('/account', AccountController::class)->name('account');
 
-    // On LW_4 23.01.2023
-    Route::resource('categories', AdminCategoryController::class);
-    Route::resource('news', AdminNewsController::class);
+    //ADMIN ROUTES
+    Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'is.admin'], static function () {
+        Route::get('/', AdminController::class)
+            ->name('index');
+
+        // On LW_4 23.01.2023
+        Route::resource('categories', AdminCategoryController::class);
+        Route::resource('news', AdminNewsController::class);
+        // On HW_8 добавляем новый роут для редактирования пользователей:
+        Route::resource('users', AdminUsesrsController::class);
+    });
 });
 /*----------------------------------------------------------------------------------------------------------------*/
 
@@ -305,10 +315,26 @@ Route::group(['prefix' => 'HW_6', 'as' => 'hw_6.'], static function () {
     Route::get('/{news}/links_on_text_news', [NewsControllerHW::class, 'HW_6_links_on_text_news'])
         ->name('links_on_text_news');
 
-    
+
     Route::resource('news', HW_6NewsController::class);
     Route::resource('categories', HW_6CategoryController::class);
     Route::resource('orderForm', OrderFormController::class);
     Route::resource('sources', HW_6SourcesController::class);
 });
 /*-----------------------------------------------------------------------------------------------------------------------------*/
+
+// LW_8
+
+Route::get('session', function () {
+    $sessionName = 'test';
+    if (session()->has($sessionName)) {
+        dd(session()->get($sessionName), session()->all());
+        session()->forget($sessionName);
+    }
+
+    session()->put($sessionName, 'example');
+});
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

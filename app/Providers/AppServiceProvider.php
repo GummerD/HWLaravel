@@ -8,6 +8,8 @@ use Illuminate\Pagination\Paginator;
 use App\QueryBuilders\NewsQueryBuilder;
 use Illuminate\Support\ServiceProvider;
 use App\QueryBuilders\CategoryQueryBuilder;
+use App\QueryBuilders\HW\HWSourcesQueryBuilder;
+use App\QueryBuilders\HW\HWUsersQueryBuilder;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             QueryBuilder::class,
-            NewsQueryBuilder::class   
+            NewsQueryBuilder::class
         );
 
         $this->app->bind(
@@ -35,20 +37,23 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->bind(
             QueryBuilder::class,
-            HWNewsQueryBuilder::class   
+            HWNewsQueryBuilder::class
         );
 
         $this->app->bind(
             QueryBuilder::class,
-            HWSourcesQueryBuilder::class   
+            HWSourcesQueryBuilder::class
         );
 
         $this->app->bind(
             QueryBuilder::class,
-            HWOrderFormQueryBuilder::class   
+            HWOrderFormQueryBuilder::class
         );
 
-
+        $this->app->bind(
+            QueryBuilder::class,
+            HWUsersQueryBuilder::class
+        );
     }
 
     /**

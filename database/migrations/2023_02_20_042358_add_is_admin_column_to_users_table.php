@@ -13,10 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
+        Schema::table('users', static function (Blueprint $table): void
+        {
+            $table->boolean('is_admin')->after('id')->default(false);
         });
     }
 
@@ -27,6 +26,9 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('password_resets');
+        Schema::table('users',static function (Blueprint $table):void 
+        {
+            $table->dropColumn('is_admin');
+        });
     }
 };
