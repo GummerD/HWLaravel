@@ -16,8 +16,10 @@ use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\HW_6\SourcesController as HW_6SourcesController;
 use App\Http\Controllers\HW_6\CategoryController as HW_6CategoryController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\ParserController;
 use App\Http\Controllers\Admin\UsersController as AdminUsesrsController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\SocialProvidersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +51,8 @@ Route::group(['middleware' => 'auth'], static function () {
         Route::resource('news', AdminNewsController::class);
         // On HW_8 добавляем новый роут для редактирования пользователей:
         Route::resource('users', AdminUsesrsController::class);
+        // On LW_9 новый роут для парсинга новостей
+        Route::get('/parser', ParserController::class)->name('parser');
     });
 });
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -338,3 +342,14 @@ Route::get('session', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+//LW_9 routes
+Route::group(['middleware' => 'guest'], function(){
+    
+    Route::get('/auth/redirect/{driver}', [SocialProvidersController::class, 'redirect'])
+        ->where('driever', '\w+')
+        ->name('social.auth.redirect');
+     
+    Route::get('/auth/callback/{driver}', [SocialProvidersController::class, 'callback'])
+        ->where('driever', '\w+');
+});
