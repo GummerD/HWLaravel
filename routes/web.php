@@ -1,25 +1,26 @@
 <?php
 
-use App\Http\Controllers\Account\IndexController as AccountController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\NewsControllerHW;
 use App\Http\Controllers\NewsControllerLW;
 use App\Http\Controllers\HW_6\NewsController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HW_4\FormsController;
 use App\Http\Controllers\HW_4\OrderController;
+use App\Http\Controllers\Admin\ParserController;
 use App\Http\Controllers\HW_6\OrderFormController;
+use App\Http\Controllers\SocialProvidersController;
 use App\Http\Controllers\Admin\IndexController as AdminController;
 use App\Http\Controllers\HW_6\NewsController as HW_6NewsController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\Account\IndexController as AccountController;
+use App\Http\Controllers\Admin\UsersController as AdminUsesrsController;
 use App\Http\Controllers\HW_6\SourcesController as HW_6SourcesController;
 use App\Http\Controllers\HW_6\CategoryController as HW_6CategoryController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
-use App\Http\Controllers\Admin\ParserController;
-use App\Http\Controllers\Admin\UsersController as AdminUsesrsController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\SocialProvidersController;
+use App\Http\Controllers\Admin\SourcesController as AdminSourcesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,14 +46,16 @@ Route::group(['middleware' => 'auth'], static function () {
     Route::group(['prefix' => 'admin', 'as' => 'admin.', 'middleware' => 'is.admin'], static function () {
         Route::get('/', AdminController::class)
             ->name('index');
-
         // On LW_4 23.01.2023
         Route::resource('categories', AdminCategoryController::class);
         Route::resource('news', AdminNewsController::class);
         // On HW_8 добавляем новый роут для редактирования пользователей:
         Route::resource('users', AdminUsesrsController::class);
         // On LW_9 новый роут для парсинга новостей
-        Route::get('/parser', ParserController::class)->name('parser');
+        Route::get('/parser', ParserController::class)
+            ->name('parser');
+        //On HW_10 добавляем в роут контроллер "источники" для парсинга:
+        Route::resource('sources', AdminSourcesController::class);
     });
 });
 /*----------------------------------------------------------------------------------------------------------------*/
@@ -327,7 +330,7 @@ Route::group(['prefix' => 'HW_6', 'as' => 'hw_6.'], static function () {
 });
 /*-----------------------------------------------------------------------------------------------------------------------------*/
 
-// LW_8
+// LW_8 rotes:
 
 Route::get('session', function () {
     $sessionName = 'test';
@@ -343,7 +346,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-//LW_9 routes
+//LW_9 routes:
 Route::group(['middleware' => 'guest'], function(){
     
     Route::get('/auth/redirect/{driver}', [SocialProvidersController::class, 'redirect'])
@@ -353,3 +356,4 @@ Route::group(['middleware' => 'guest'], function(){
     Route::get('/auth/callback/{driver}', [SocialProvidersController::class, 'callback'])
         ->where('driever', '\w+');
 });
+

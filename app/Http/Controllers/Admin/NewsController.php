@@ -6,6 +6,8 @@ use App\Models\News;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Enumus\NewsStatusEnum;
+use App\Services\UploadService;
+use App\Services\UploadedService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
@@ -16,6 +18,7 @@ use App\QueryBuilders\NewsQueryBuilder;
 use App\Http\Requests\News\CreateRequest;
 use App\QueryBuilders\CategoryQueryBuilder;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class NewsController extends Controller
 {
@@ -52,9 +55,9 @@ class NewsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateRequest $request):RedirectResponse
+    public function store(CreateRequest $request): RedirectResponse
     {
-       
+
         /*
         $request->validate([ - все перенесено в контроллер, можно также вызвать из Model, но лучше прописать отдельную сущность
             'category_id' => ['required', 'array', ] ,
@@ -67,7 +70,7 @@ class NewsController extends Controller
         ]);
         $news = new News($request->except('_token', 'category_ids')); - не нужно боле использовать, так как поля уже прописаны в сщности - CreateRequest
         */
-        
+
 
         $news = News::create($request->validated());
 
@@ -85,9 +88,12 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id, NewsQueryBuilder $newsQueryBuilder)
     {
-        //
+        //dd($newsQueryBuilder->getNewsById($id));
+        return \view('admin.news.show', [
+            'newsList' => $newsQueryBuilder->getNewsById($id)
+        ]);
     }
 
     /**
@@ -112,10 +118,22 @@ class NewsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(EditRequest $request, News $news): RedirectResponse
-    {
+    public function update(
+        EditRequest $request,
+        News $news,
+        UploadService $uploadService
+
+    ): RedirectResponse {
+        $validated = $request->validated();
+        //dd($request->hasFile('image'));
         //dd($request->all());
-        $news = $news->fill($request->validated());
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $uploadService->uploadImage($request->file('image'));
+        }
+        
+        $news = $news->fill($validated);
+
         if ($news->save()) {
             $news->categories()->sync($request->getCategoryIds());
             return \redirect()->route('admin.news.index')->with('success', __('messages.admin.news.success'));
@@ -132,11 +150,11 @@ class NewsController extends Controller
      */
     public function destroy(News $news): JsonResponse
     {
-        try{
+        try {
             $news->delete();
 
             return \response()->json('ok');
-        }catch(\Exception $exeption){
+        } catch (\Exception $exeption) {
             \Log::error($exeption->getMessage(), [$exeption]);
 
             return \response()->json('error', 400);

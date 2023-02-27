@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('h_w__sources', function (Blueprint $table) {
+        Schema::create('sources', function (Blueprint $table): void
+        {
             $table->id();
             $table->string('name', 150);
             $table->text('link');
             $table->timestamps();
         });
-        
     }
 
     /**
@@ -27,8 +27,8 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
-        Schema::dropIfExists('h_w__sources');
+        Schema::dropIfExists('sources');
     }
 };

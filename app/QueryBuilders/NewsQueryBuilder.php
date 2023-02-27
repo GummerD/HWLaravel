@@ -21,12 +21,20 @@ final class NewsQueryBuilder extends QueryBuilder
 
     public function getAll(): Collection
     {
-        return News::query()->get();
+        return $this->model->get();
+    }
+
+    public function getNewsById($id): Collection
+    {   
+        //dd($this->model->find($id)->getAttributes());
+        //dump($this->model->where('id','=',$id)->get());
+        return $this->model->where('id','=',$id)->get();
+        //return $this->model->find($id)->getAttributes();
     }
 
     public function getNewsByStatus(string  $status): Collection
     {
-        return News::query()->where('status', $status)->get();
+        return $this->model->where('status', $status)->get();
     }
 
     public function getNewsWithPagination (int $quantity = 10): LengthAwarePaginator
